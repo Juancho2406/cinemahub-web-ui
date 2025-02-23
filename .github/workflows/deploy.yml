@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: prod 
     steps:
     # Paso 1: Configurar AWS CLI con las credenciales almacenadas en GitHub Secrets
     - name: Set up AWS CLI
