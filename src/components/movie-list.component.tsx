@@ -1,28 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { getMovies } from '../services/movie.service';
-const MovieList = ({ onSelectMovie }:any) => {
-  const [movies, setMovies] = useState([]);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const data = await getMovies();
-        setMovies(data);
-      } catch (error) {
-        console.error('Error fetching movies:', error);
-      }
-    };
-
-    fetchMovies();
-  }, []);
-
+import React from "react";
+import { useAppContext } from "../hooks/context";
+const MovieList = ({ onSelectMovie }: any) => {
+  const { state } = useAppContext();
   return (
     <div>
-      <h2>Lista de Películas</h2>
+      <h1>Películas</h1>
       <ul>
-        {movies.map((movie:any) => (
-          <li key={movie.id} onClick={() => onSelectMovie(movie)}>
-            {movie.title}
+        {state.movies.map((movie) => (
+          <li key={movie.id}>
+            {movie.title} - {movie.genre} - {movie.duration} min
           </li>
         ))}
       </ul>

@@ -16,3 +16,16 @@ export const createRoom = async (roomData: { name: string, capacity: number }) =
     }
   };
   
+  export const getRooms = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/rooms`, {
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+      throw error;
+    }
+  };

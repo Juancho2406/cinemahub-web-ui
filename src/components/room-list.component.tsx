@@ -1,20 +1,13 @@
-import React, { useState, useEffect } from 'react';
-
+import React from 'react';
+import { useAppContext } from "../hooks/context";
 const RoomList = ({ selectedMovie, onSelectRoom }:any) => {
-  const [rooms, setRooms] = useState<any>([]);
-
-  useEffect(() => {
-    const fetchRooms = async () => {
-    };
-    if (selectedMovie) fetchRooms();
-  }, [selectedMovie]);
-
+    const { state } = useAppContext();
   return (
     <div>
-      <h2>Salas para {selectedMovie ? selectedMovie.title : ''}</h2>
+      <h1>Salas</h1>
       <ul>
-        {rooms.map((room:any) => (
-          <li key={room.id} onClick={() => onSelectRoom(room)}>
+        {state.rooms.map((room) => (
+          <li key={room.id}>
             {room.name} - Capacidad: {room.capacity}
           </li>
         ))}
