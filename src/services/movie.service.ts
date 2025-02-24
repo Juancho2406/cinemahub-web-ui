@@ -1,7 +1,8 @@
 import axios from "axios";
 import { Movie } from "../hooks/context";
 
-export const BASE_URL = "https://3tmga2hhac.execute-api.us-east-1.amazonaws.com/prod";
+export const BASE_URL =
+  "https://3tmga2hhac.execute-api.us-east-1.amazonaws.com/prod";
 
 export class MovieService {
   // Crear película
@@ -17,8 +18,8 @@ export class MovieService {
       const response = await axios.post(`${BASE_URL}/movies`, movieBody, {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+          Accept: "application/json"
+        }
       });
       return response.data;
     } catch (error) {
@@ -33,8 +34,8 @@ export class MovieService {
       const response = await axios.get(`${BASE_URL}/movies`, {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+          Accept: "application/json"
+        }
       });
       return response.data as Movie[];
     } catch (error) {
@@ -49,8 +50,8 @@ export class MovieService {
       const response = await axios.delete(`${BASE_URL}/movies/${movie.id}`, {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
-        },
+          Accept: "application/json"
+        }
       });
       return response.data;
     } catch (error) {
@@ -62,19 +63,24 @@ export class MovieService {
   // Actualizar película por ID
   static async updateMovie(movie: Movie) {
     const movieBody = {
+      id: movie.id,
       title: movie.title,
       genre: movie.genre,
       duration: movie.duration,
-      rating: movie.rating,  // Usando el rating que venga del movieData
+      rating: movie.rating // Usando el rating que venga del movieData
     };
 
     try {
-      const response = await axios.put(`${BASE_URL}/movies/${movie.id}`, movieBody, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+      const response = await axios.put(
+        `${BASE_URL}/movies/${movie.id}`,
+        movieBody,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          }
+        }
+      );
       return response.data;
     } catch (error) {
       console.error("Error updating movie:", error);

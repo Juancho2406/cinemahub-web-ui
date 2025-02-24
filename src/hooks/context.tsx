@@ -41,12 +41,13 @@ interface State {
   selectedRoom?: Room;
   selectedReservation?: Reservation;
   selectedMovie?: Movie;
+  selectedSeats?: string[];
 }
 
 const initialState: State = {
   movies: [],
   rooms: [],
-  reservations: [],
+  reservations: []
 };
 
 type Action =
@@ -65,6 +66,7 @@ type Action =
   | { type: "SELECTED_ROOM"; payload: Room }
   | { type: "SELECTED_RESERVATION"; payload: Reservation }
   | { type: "DELETE_RESERVATION"; payload: Reservation }
+  | { type: "SELECTED_SEATS"; payload: string[] }
   | { type: "LIST_MOVIES" }
   | { type: "LIST_ROOMS" }
   | { type: "LIST_RESERVATIONS" };
@@ -79,7 +81,11 @@ function reducer(state: State, action: Action): State {
       return { ...state, movies: [...state.movies, ...action.payload] };
     case "ADD_ROOM":
       return { ...state, rooms: [...state.rooms, action.payload] };
-
+    case "SELECTED_SEATS":
+      return {
+        ...state,
+        selectedSeats: action.payload // Actualiza los asientos seleccionados
+      };
     case "SELECTED_MOVIE":
       return {
         ...state,
@@ -88,10 +94,11 @@ function reducer(state: State, action: Action): State {
     case "REMOVE_MOVIE":
       return {
         ...state,
-        movies: state.movies.filter((movie: any) => movie.id !== action.payload)
+        movies: state.movies.filter(
+          (movie: any) => movie.id !== action.payload.id
+        )
       };
     case "REMOVE_ROOM":
-      // Eliminar sala de la lista
       return {
         ...state,
         rooms: state.rooms.filter((room: any) => room.name !== action.payload)

@@ -3,44 +3,44 @@ import { useAppContext } from "../hooks/context";
 import { CheckCircle, Circle } from "react-feather";
 
 export const MapSeats = () => {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
   const room = state.selectedRoom;
 
   if (room?.name === "") {
     return <></>;
   }
 
-  const [selectedSeats, setSelectedSeats] = useState<string[]>(
-    state.selectedReservation?.reservedSeats || []
-  );
+  // Usamos el estado global de selectedSeats
+  const selectedSeats = state.selectedSeats;
 
-  // useEffect to update selectedSeats when reservation changes
+  // useEffect para actualizar selectedSeats cuando cambia la reserva
   useEffect(() => {
     if (state.selectedReservation) {
-      setSelectedSeats(state.selectedReservation.reservedSeats ?? []);
+      dispatch({
+        type: "SELECTED_SEATS",
+        payload: state.selectedReservation.reservedSeats || [],
+      });
     }
-  }, [state.selectedReservation]);
+  }, [state.selectedReservation, dispatch]);
 
-  // Function to handle seat selection or deselection
+  // Función para manejar la selección de asientos
   const handleSeatChange = (seat: string) => {
-    setSelectedSeats((prevSeats) => {
-      // Si el asiento ya está seleccionado, lo desmarcamos
-      if (prevSeats.includes(seat)) {
-        return prevSeats.filter((s) => s !== seat); // Elimina el asiento de la lista
-      } else {
-        return [...prevSeats, seat]; // Agrega el asiento a la lista
-      }
+    dispatch({
+      type: "SELECTED_SEATS",
+      payload: selectedSeats?.includes(seat)
+        ? selectedSeats.filter((s) => s !== seat) // Elimina el asiento de la lista
+        : [...selectedSeats || [], seat], // Agrega el asiento a la lista
     });
   };
 
-  // Function to render seats
+  // Función para renderizar los asientos
   const renderSeats = () => {
     const rows = room?.seats || []; // Obtener las filas de asientos
 
     return rows.map((row: any, rowIndex: number) => (
       <div key={rowIndex} className="seat-row">
         {row.map((seat: string) => {
-          const isSelected = selectedSeats.includes(seat); // Verificamos si está seleccionado
+          const isSelected = selectedSeats?.includes(seat); // Verificamos si está seleccionado
           const isReserved = room?.reservedSeats?.includes(seat); // Verificamos si está reservado
 
           return (

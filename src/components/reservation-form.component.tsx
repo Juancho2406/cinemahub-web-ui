@@ -5,47 +5,60 @@ import { MapSeats } from "./map-seats-component";
 
 const ReservationForm = () => {
   const { state, dispatch } = useAppContext();
+  // Estados iniciales
+  const [movieName, setMovieName] = useState<string>(state.selectedReservation?.movieName || "");
+  const [roomName, setRoomName] = useState<string>(state.selectedRoom?.name || "");
+  const [schedule, setSchedule] = useState<string>(state.selectedReservation?.schedule || ""); 
+  const [email, setEmail] = useState<string>(state.selectedReservation?.email || "");
+  const [sendConfirmationEmail, setSendConfirmationEmail] = useState<boolean>(state.selectedReservation ? true : false);
 
-  const [movieName, setmovieName] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.movieName : ""
-  );
-  const [roomName, setroomName] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.roomName : ""
-  );
-  const [schedule, setSchedule] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.schedule : ""
-  );
-  const [reservedSeats, setreservedSeats] = useState<string[]>(
-    state.selectedReservation?.reservedSeats ?? []
-  );
-  const [email, setEmail] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.email : ""
-  );
-  const [sendConfirmationEmail, setSendConfirmationEmail] = useState<boolean>(
-    state.selectedReservation ? true : false
-  );
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  // Manejo de cambios en los inputs
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    if (name === "movieName") setmovieName(value);
-    if (name === "roomName") setroomName(value);
-    if (name === "schedule") setSchedule(value);
-    if (name === "email") setEmail(value);
+
+    if (name === "movieName") {
+      setMovieName(value);
+    }
+
+    if (name === "roomName") {
+      setRoomName(value);
+
+      const selectedRoom = state.rooms.find(room => room.name === value);
+      if (selectedRoom) {
+        dispatch({
+          type: "SELECTED_ROOM",
+          payload: selectedRoom
+        });
+      } else {
+        dispatch({
+          type: "SELECTED_ROOM",
+          payload: {} as any
+        });
+      }
+    }
+
+    if (name === "schedule") {
+      setSchedule(value);
+    }
+
+    if (name === "email") {
+      setEmail(value);
+    }
+
     if (name === "sendConfirmationEmail" && "checked" in e.target) {
       setSendConfirmationEmail(e.target.checked);
     }
   };
 
+  // Manejo del envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const newReservation: Reservation = {
+      id: state.selectedReservation?.id, // Si hay una reserva seleccionada, se mantiene el id, sino se genera uno nuevo
       movieName,
       roomName,
       schedule,
-      reservedSeats,
+      reservedSeats: state.selectedSeats, // Usamos el estado global de reservedSeats
       email,
       sendConfirmationEmail
     };
@@ -60,34 +73,26 @@ const ReservationForm = () => {
       dispatch({ type: "ADD_RESERVATION", payload: newReservation });
     }
 
-    // Limpiar formulario
-    setmovieName("");
-    setroomName("");
+    // Limpiar formulario después de enviar
+    setMovieName("");
+    setRoomName("");
     setSchedule("");
-    setreservedSeats([]);
     setEmail("");
     setSendConfirmationEmail(false);
   };
 
+  // Efecto para actualizar los campos cuando se selecciona una nueva sala
   useEffect(() => {
-    if (state.selectedReservation) {
-      // Llenar los campos con los datos de la reserva seleccionada
-      setmovieName(state.selectedReservation.movieName);
-      setroomName(state.selectedReservation.roomName);
-      setSchedule(state.selectedReservation.schedule);
-      setreservedSeats(state.selectedReservation.reservedSeats ?? []);
-      setEmail(state.selectedReservation.email || "");
-      setSendConfirmationEmail(
-        state.selectedReservation.sendConfirmationEmail || false
-      );
+    if (state.selectedRoom) {
+      // Si hay una sala seleccionada, actualizamos los valores del formulario
+      setRoomName(state.selectedRoom.name);
+      // Puedes agregar lógica adicional para llenar otros campos, como schedule o reservedSeats, si es necesario
     }
-  }, [state.selectedReservation]);
+  }, [state.selectedRoom]);
 
   return (
     <div>
-      <h2>
-        {state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}
-      </h2>
+      <h2>{state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="movieName" className="input-label">
@@ -124,7 +129,7 @@ const ReservationForm = () => {
           >
             <option value="">Seleccione una sala</option>
             {state.rooms.map((room) => (
-              <option key={room.id} value={room.id}>
+              <option key={room.id} value={room.name}>
                 {room.name} (Capacidad: {room.capacity})
               </option>
             ))}
@@ -176,13 +181,11 @@ const ReservationForm = () => {
           </label>
         </div>
 
-        <MapSeats></MapSeats>
+        <MapSeats /> {/* El componente que maneja la selección de asientos */}
 
         <div>
           <button type="submit" className="btn-custom">
-            {state.selectedReservation
-              ? "Actualizar Reserva"
-              : "Registrar Reserva"}
+            {state.selectedReservation ? "Actualizar Reserva" : "Registrar Reserva"}
           </button>
         </div>
       </form>

@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext, Room } from "../hooks/context";
 import { RoomService } from "../services/room.service";
+import { MapSeats } from "./map-seats-component";
 
 const RoomForm = () => {
   const { state, dispatch } = useAppContext();
 
   const [name, setName] = useState<string>(state.selectedRoom?.name || "");
-  const [capacity, setCapacity] = useState<number>(state.selectedRoom?.capacity || 0);
-  const [rows, setRows] = useState<number>(state.selectedRoom?.seats?.length || 0);
-  const [seatsPerRow, setSeatsPerRow] = useState<number>(state.selectedRoom?.seats?.[0]?.length || 0);
-  const [seats, setSeats] = useState<string[][]>(state.selectedRoom?.seats || []);
+  const [capacity, setCapacity] = useState<number>(
+    state.selectedRoom?.capacity || 0
+  );
+  const [rows, setRows] = useState<number>(
+    state.selectedRoom?.seats?.length || 0
+  );
+  const [seatsPerRow, setSeatsPerRow] = useState<number>(
+    state.selectedRoom?.seats?.[0]?.length || 0
+  );
+  const [seats, setSeats] = useState<string[][]>(
+    state.selectedRoom?.seats || []
+  );
 
   // Maneja cambios en los inputs
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     const numericValue = Number(value);
 
@@ -38,7 +49,11 @@ const RoomForm = () => {
   };
 
   // Generar la matriz de asientos con base en la capacidad
-  const updateSeats = (newCapacity: number, rows: number, seatsPerRow: number) => {
+  const updateSeats = (
+    newCapacity: number,
+    rows: number,
+    seatsPerRow: number
+  ) => {
     const totalSeats = rows * seatsPerRow;
 
     if (newCapacity > totalSeats) {
@@ -50,7 +65,11 @@ const RoomForm = () => {
   };
 
   // Generar la matriz de asientos
-  const generateSeatsMatrix = (rows: number, seatsPerRow: number, newCapacity: number) => {
+  const generateSeatsMatrix = (
+    rows: number,
+    seatsPerRow: number,
+    newCapacity: number
+  ) => {
     const newSeats: string[][] = [];
     let seatIndex = 0;
 
@@ -76,7 +95,7 @@ const RoomForm = () => {
       id: state.selectedRoom?.id || Date.now().toString(), // Si es una sala existente, usa el ID
       name,
       capacity,
-      seats,
+      seats
     };
 
     if (state.selectedRoom) {
@@ -106,7 +125,7 @@ const RoomForm = () => {
       setSeatsPerRow(state.selectedRoom.seats?.[0]?.length || 0);
       setSeats(state.selectedRoom.seats || []);
     }
-  }, [state.selectedRoom]);
+  }, [state.selectedRoom]); // Este efecto se ejecutará cada vez que se seleccione una sala
 
   // Crear un array con números del 1 al 20
   const rowOptions = Array.from({ length: 20 }, (_, index) => index + 1);
@@ -186,23 +205,7 @@ const RoomForm = () => {
             ))}
           </select>
         </div>
-
-        {/* Mostrar el mapa de la sala */}
-        <div>
-          <h3>Mapa de la Sala</h3>
-          <div className="seats-map">
-            {seats.map((row, index) => (
-              <div key={index} className="seat-row">
-                {row.map((seat, i) => (
-                  <span key={i} className="seat">
-                    {seat}
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
+        <MapSeats></MapSeats>
         <div>
           <button type="submit">
             {state.selectedRoom ? "Actualizar Sala" : "Registrar Sala"}

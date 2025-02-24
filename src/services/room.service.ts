@@ -1,9 +1,9 @@
 import axios from "axios";
-import { BASE_URL } from "./movie.service"; // Asegúrate de que la ruta esté correcta
+import { BASE_URL } from "./movie.service"; 
 import { Room } from "../hooks/context";
 
 export class RoomService {
-  // Crear una sala
+
   static async createRoom(roomData: Room) {
     const roomDataBody = {
       ...roomData,
@@ -23,7 +23,6 @@ export class RoomService {
     }
   }
 
-  // Obtener todas las salas
   static async getRooms() {
     try {
       const response = await axios.get(`${BASE_URL}/rooms`, {
@@ -32,47 +31,40 @@ export class RoomService {
         }
       });
       const rooms: [any] = response.data;
-      rooms.map((room) => {
-        const array = JSON.parse(room.seats);
-        room.seats = array
-        return room;
-      });
-      return rooms; // Devuelve la lista de salas
+      return rooms; 
     } catch (error) {
       console.error("Error fetching rooms:", error);
-      throw error; // Lanza el error para manejarlo en la parte que lo llame
+      throw error; 
     }
   }
 
-  // Eliminar una sala por nombre
   static async deleteRoom(room: Room) {
     try {
-      const response = await axios.delete(`${BASE_URL}/rooms/${room.name}`, {
+      const response = await axios.delete(`${BASE_URL}/rooms/${room.id}`, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json"
         }
       });
-      return response.data; // Devuelve la respuesta del backend (puede ser un mensaje de éxito)
+      return response.data; 
     } catch (error) {
       console.error("Error deleting room:", error);
-      throw error; // Lanza el error para manejarlo en la parte que lo llame
+      throw error; 
     }
   }
 
-  // Actualizar una sala
   static async updateRoom(room: Room) {
     try {
-      const response = await axios.put(`${BASE_URL}/rooms/${room.name}`, room, {
+      const response = await axios.put(`${BASE_URL}/rooms/${room.id}`, room, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json"
         }
       });
-      return response.data; // Devuelve la sala actualizada
+      return response.data; 
     } catch (error) {
       console.error("Error updating room:", error);
-      throw error; // Lanza el error para manejarlo en la parte que lo llame
+      throw error; 
     }
   }
 }
