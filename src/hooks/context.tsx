@@ -84,7 +84,7 @@ function reducer(state: State, action: Action): State {
     case "SELECTED_SEATS":
       return {
         ...state,
-        selectedSeats: action.payload // Actualiza los asientos seleccionados
+        selectedSeats: action.payload
       };
     case "SELECTED_MOVIE":
       return {

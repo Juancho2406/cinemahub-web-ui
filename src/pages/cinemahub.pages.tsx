@@ -9,8 +9,8 @@ import ReservationForm from "../components/reservation-form.component";
 import { Loader } from "../components/at/loader-at-component";
 
 export const CinemaHubComponent = () => {
-  const { loading } = useCinemaServices(); // Obtiene el estado de carga
-  const [activeMenu, setActiveMenu] = useState<string>("movies"); // Estado para controlar el menú activo
+  const { loading } = useCinemaServices(); 
+  const [activeMenu, setActiveMenu] = useState<string>("movies"); 
 
   if (loading) {
     return <Loader />;
@@ -18,7 +18,6 @@ export const CinemaHubComponent = () => {
 
   return (
     <div className="cinemaHubPage">
-      {/* Barra de Menús */}
       <div className="menu-bar">
         <button onClick={() => setActiveMenu("movies")}>Películas</button>
         <button onClick={() => setActiveMenu("rooms")}>Salas</button>
@@ -27,7 +26,6 @@ export const CinemaHubComponent = () => {
         </button>
       </div>
 
-      {/* Contenido Dinámico */}
       <div className="content">
         {activeMenu === "movies" && (
           <>

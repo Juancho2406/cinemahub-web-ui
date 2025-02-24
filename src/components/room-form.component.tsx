@@ -20,7 +20,6 @@ const RoomForm = () => {
     state.selectedRoom?.seats || []
   );
 
-  // Maneja cambios en los inputs
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -33,22 +32,21 @@ const RoomForm = () => {
         break;
       case "capacity":
         setCapacity(numericValue);
-        updateSeats(numericValue, rows, seatsPerRow); // Ajusta los asientos al cambiar la capacidad
+        updateSeats(numericValue, rows, seatsPerRow); 
         break;
       case "rows":
         setRows(numericValue);
-        updateSeats(capacity, numericValue, seatsPerRow); // Reajustar asientos por filas
+        updateSeats(capacity, numericValue, seatsPerRow);
         break;
       case "seatsPerRow":
         setSeatsPerRow(numericValue);
-        updateSeats(capacity, rows, numericValue); // Reajustar capacidad al cambiar los asientos por fila
+        updateSeats(capacity, rows, numericValue); 
         break;
       default:
         break;
     }
   };
 
-  // Generar la matriz de asientos con base en la capacidad
   const updateSeats = (
     newCapacity: number,
     rows: number,
@@ -64,7 +62,6 @@ const RoomForm = () => {
     setCapacity(rows * seatsPerRow);
   };
 
-  // Generar la matriz de asientos
   const generateSeatsMatrix = (
     rows: number,
     seatsPerRow: number,
@@ -99,16 +96,16 @@ const RoomForm = () => {
     };
 
     if (state.selectedRoom) {
-      // Si hay una sala seleccionada, se actualiza
-      await RoomService.updateRoom(roomData); // Llamada a updateRoom
+      
+      await RoomService.updateRoom(roomData); 
       dispatch({ type: "UPDATE_ROOM", payload: roomData });
     } else {
-      // Si no hay sala seleccionada, se crea una nueva
+
       await RoomService.createRoom(roomData);
       dispatch({ type: "ADD_ROOMS", payload: [roomData] });
     }
 
-    // Limpiar formulario después de enviar
+
     setName("");
     setCapacity(0);
     setRows(0);
@@ -116,7 +113,6 @@ const RoomForm = () => {
     setSeats([]);
   };
 
-  // Efecto para llenar los campos si hay una sala seleccionada
   useEffect(() => {
     if (state.selectedRoom) {
       setName(state.selectedRoom.name);
@@ -125,9 +121,8 @@ const RoomForm = () => {
       setSeatsPerRow(state.selectedRoom.seats?.[0]?.length || 0);
       setSeats(state.selectedRoom.seats || []);
     }
-  }, [state.selectedRoom]); // Este efecto se ejecutará cada vez que se seleccione una sala
+  }, [state.selectedRoom]); 
 
-  // Crear un array con números del 1 al 20
   const rowOptions = Array.from({ length: 20 }, (_, index) => index + 1);
   const seatOptions = Array.from({ length: 20 }, (_, index) => index + 1);
 

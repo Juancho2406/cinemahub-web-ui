@@ -4,14 +4,11 @@ import { ReservationService } from "../services/reservation.service"; // Asegúr
 
 const ReservationList = () => {
   const { state, dispatch } = useAppContext();
-  // Función para manejar la eliminación de una reserva
   const handleDelete = (reservation: Reservation) => {
-    console.log(reservation);
-    // Llamar al servicio para borrar la reserva en la base de datos
+
     ReservationService.deleteReservation(reservation);
     dispatch({ type: "DELETE_RESERVATION", payload: reservation });
   };
-  // Función para manejar la selección de una reserva
   const handleSelect = (reservation: Reservation) => {
     dispatch({ type: "SELECTED_RESERVATION", payload: reservation });
   };
@@ -37,7 +34,6 @@ const ReservationList = () => {
             </div>
 
             <div className="item-action">
-              {/* Aquí asignamos el handleDelete a cada reserva */}
               <button onClick={() => handleDelete(reservation)}>
                 Eliminar
               </button>

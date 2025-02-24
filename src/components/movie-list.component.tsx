@@ -1,25 +1,19 @@
 import React from "react";
 import { useAppContext, Movie } from "../hooks/context";
-import { MovieService } from "../services/movie.service"; // Asegúrate de importar la función deleteMovie
+import { MovieService } from "../services/movie.service"; 
 const MovieList = () => {
   const { state, dispatch } = useAppContext();
 
-  // Función para manejar la eliminación de una película
   const handleDelete = async (movie: Movie) => {
     console.log(movie)
     try {
-      // Llamamos a la función deleteMovie y esperamos la respuesta
       await MovieService.deleteMovie(movie);
-
-      // Después de eliminar, actua
-      // lizamos el estado para eliminarla de la lista
       dispatch({
         type: "REMOVE_MOVIE",
         payload: movie
       });
     } catch (error) {
       console.error("Error deleting movie:", error);
-      // Aquí puedes agregar algún manejo de errores o una notificación para el usuario
     }
   };
 
@@ -46,7 +40,7 @@ const MovieList = () => {
 
               <div
                 className="item-action"
-                onClick={() => handleDelete(movie)} // Llamamos a handleDelete al hacer clic en "Eliminar"
+                onClick={() => handleDelete(movie)}
               >
                 Eliminar
               </div>

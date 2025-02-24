@@ -4,7 +4,6 @@ import { MovieService } from "../services/movie.service";
 import { RoomService } from "../services/room.service";
 import { ReservationService } from "../services/reservation.service";
 
-// Funciones para obtener los datos de los servicios
 const fetchMovies = async (): Promise<Movie[]> => {
   const movies = await MovieService.getMovies();
   return movies;
@@ -25,15 +24,14 @@ const fetchReservations = async (): Promise<Reservation[]> => {
   return reservations;
 };
 
-// Hook para cargar los datos del cine
 export const useCinemaServices = () => {
   const { dispatch } = useAppContext();
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const loadCinemaData = async () => {
       try {
-        setLoading(true); // Inicia el loading al cargar los datos
+        setLoading(true);
 
         const movies = await fetchMovies();
         const rooms = await fetchRooms();
@@ -60,9 +58,9 @@ export const useCinemaServices = () => {
         dispatch({ type: "ADD_ROOMS", payload: rooms });
         dispatch({ type: "ADD_RESERVATIONS", payload: reservations });
 
-        setLoading(false); // Termina el loading cuando los datos estén cargados
+        setLoading(false);
       } catch (error) {
-        setLoading(false); // Asegúrate de finalizar el loading incluso si hay un error
+        setLoading(false);
         console.error("Error loading cinema data:", error);
       }
     };
@@ -70,5 +68,5 @@ export const useCinemaServices = () => {
     loadCinemaData();
   }, [dispatch]);
 
-  return { loading }; // Devuelve el estado de carga
+  return { loading }; 
 };

@@ -36,7 +36,7 @@ const MovieForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newMovie: Movie = {
-      id: state.selectedMovie ? state.selectedMovie.id : Date.now().toString(), // Si hay una película seleccionada, mantén el mismo ID
+      id: state.selectedMovie ? state.selectedMovie.id : Date.now().toString(), 
       title,
       genre,
       duration: duration || 0,
@@ -50,7 +50,6 @@ const MovieForm = () => {
         payload: newMovie
       });
     } else {
-      // Si no hay una película seleccionada, creamos una nueva
       MovieService.createMovie(newMovie);
       dispatch({
         type: "ADD_MOVIES",
@@ -58,7 +57,6 @@ const MovieForm = () => {
       });
     }
 
-    // Limpiar los campos después de la acción
     setTitle("");
     setGenre("");
     setDuration(0);

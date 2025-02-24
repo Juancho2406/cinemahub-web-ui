@@ -6,7 +6,6 @@ import { MapSeats } from "./map-seats-component";
 const RoomList = () => {
   const { state, dispatch } = useAppContext();
 
-  // Función para manejar la eliminación de una sala
   const handleDelete = async (room: Room) => {
     try {
       await RoomService.deleteRoom(room);
@@ -19,7 +18,6 @@ const RoomList = () => {
     }
   };
 
-  // Función para manejar la selección de una sala
   const handleRoomClick = (room: Room) => {
     dispatch({
       type: "SELECTED_ROOM",
@@ -34,14 +32,14 @@ const RoomList = () => {
           <li key={room.id}>
             <div
               className="item-content"
-              onClick={() => handleRoomClick(room)} // Aquí despachamos la acción para seleccionar la sala
+              onClick={() => handleRoomClick(room)}
             >
               {room.name} - Capacidad: {room.capacity}
             </div>
 
             <div
               className="item-action"
-              onClick={() => handleDelete(room)} // Elimina la sala al hacer click en "Eliminar"
+              onClick={() => handleDelete(room)} 
             >
               Eliminar
             </div>
