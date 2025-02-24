@@ -10,10 +10,10 @@ export const MapSeats = () => {
     return <></>;
   }
 
-  // Usamos el estado global de selectedSeats
+
   const selectedSeats = state.selectedSeats;
 
-  // useEffect para actualizar selectedSeats cuando cambia la reserva
+
   useEffect(() => {
     if (state.selectedReservation) {
       dispatch({
@@ -23,34 +23,30 @@ export const MapSeats = () => {
     }
   }, [state.selectedReservation, dispatch]);
 
-  // Función para manejar la selección de asientos
   const handleSeatChange = (seat: string) => {
     dispatch({
       type: "SELECTED_SEATS",
       payload: selectedSeats?.includes(seat)
-        ? selectedSeats.filter((s) => s !== seat) // Elimina el asiento de la lista
-        : [...selectedSeats || [], seat], // Agrega el asiento a la lista
+        ? selectedSeats.filter((s) => s !== seat) 
+        : [...selectedSeats || [], seat],
     });
   };
 
-  // Función para renderizar los asientos
   const renderSeats = () => {
-    const rows = room?.seats || []; // Obtener las filas de asientos
-
+    const rows = room?.seats || []; 
     return rows.map((row: any, rowIndex: number) => (
       <div key={rowIndex} className="seat-row">
         {row.map((seat: string) => {
-          const isSelected = selectedSeats?.includes(seat); // Verificamos si está seleccionado
-          const isReserved = room?.reservedSeats?.includes(seat); // Verificamos si está reservado
+          const isSelected = selectedSeats?.includes(seat); 
+          const isReserved = room?.reservedSeats?.includes(seat); 
 
           return (
             <div
               key={seat}
               className="seat-container"
-              onClick={() => !isReserved && handleSeatChange(seat)} // Solo selecciona si no está reservado
+              onClick={() => !isReserved && handleSeatChange(seat)} 
             >
               <label>
-                {/* Si el asiento está seleccionado, usamos el CheckCircle */}
                 {isSelected ? (
                   <CheckCircle
                     style={{
@@ -66,7 +62,6 @@ export const MapSeats = () => {
                     }}
                   />
                 )}
-                {/* Texto del número de asiento */}
                 <span className="seat-label">{seat}</span>
               </label>
             </div>

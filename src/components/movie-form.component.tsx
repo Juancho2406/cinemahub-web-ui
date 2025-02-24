@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useAppContext, Movie } from "../hooks/context"; // Asegúrate de tener acceso al contexto
+import { useAppContext, Movie } from "../hooks/context"; 
 import { MovieService } from "../services/movie.service";
 
 const MovieForm = () => {
@@ -27,7 +27,7 @@ const MovieForm = () => {
       if (value === "" || /^[0-9\b]+$/.test(value)) {
         setDuration(Number(value));
       } else {
-        // Limpiar el campo si se intentan ingresar letras
+
         setDuration(null);
       }
     }
@@ -35,8 +35,6 @@ const MovieForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Crear el objeto de la película
     const newMovie: Movie = {
       id: state.selectedMovie ? state.selectedMovie.id : Date.now().toString(), // Si hay una película seleccionada, mantén el mismo ID
       title,
@@ -46,8 +44,7 @@ const MovieForm = () => {
     };
 
     if (state.selectedMovie) {
-      // Si hay una película seleccionada, actualizamos
-      MovieService.updateMovie(newMovie); // Suponiendo que tienes un servicio para actualizar
+      MovieService.updateMovie(newMovie); 
       dispatch({
         type: "UPDATE_MOVIE",
         payload: newMovie

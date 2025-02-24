@@ -5,7 +5,6 @@ export const BASE_URL =
   "https://3tmga2hhac.execute-api.us-east-1.amazonaws.com/prod";
 
 export class MovieService {
-  // Crear película
   static async createMovie(movieData: Movie) {
     const movieBody = {
       title: movieData.title,
@@ -27,8 +26,6 @@ export class MovieService {
       throw error;
     }
   }
-
-  // Obtener todas las películas
   static async getMovies() {
     try {
       const response = await axios.get(`${BASE_URL}/movies`, {
@@ -44,7 +41,6 @@ export class MovieService {
     }
   }
 
-  // Eliminar película por título
   static async deleteMovie(movie: Movie) {
     try {
       const response = await axios.delete(`${BASE_URL}/movies/${movie.id}`, {
@@ -60,14 +56,13 @@ export class MovieService {
     }
   }
 
-  // Actualizar película por ID
   static async updateMovie(movie: Movie) {
     const movieBody = {
       id: movie.id,
       title: movie.title,
       genre: movie.genre,
       duration: movie.duration,
-      rating: movie.rating // Usando el rating que venga del movieData
+      rating: movie.rating 
     };
 
     try {
