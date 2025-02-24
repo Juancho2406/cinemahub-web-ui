@@ -23,10 +23,12 @@ export interface Room {
 }
 
 export interface Reservation {
-  movieId: string;
-  roomId: string;
+  id?: string;
+  movieId?: string;
+  movieName: string;
+  roomId?: string;
+  roomName: string;
   schedule: string;
-  selectedSeats: number[];
   reservedSeats?: string[];
   email: string;
   sendConfirmationEmail?: boolean;
@@ -45,28 +47,24 @@ const initialState: State = {
   movies: [],
   rooms: [],
   reservations: [],
-  selectedRoom: {
-    id: "",
-    name: "",
-    capacity: 0,
-    seats: [
-      ["A1", "A2", "A3", "A4", "A5"],
-      ["B1", "B2", "B3", "B4", "B5"],
-      ["C1", "C2", "C3", "C4", "C5"]
-    ]
-  }
 };
 
 type Action =
   | { type: "ADD_MOVIE"; payload: Movie }
+  | { type: "UPDATE_MOVIE"; payload: Movie }
+  | { type: "REMOVE_MOVIE"; payload: Movie }
+  | { type: "REMOVE_ROOM"; payload: Room }
   | { type: "ADD_ROOM"; payload: Room }
+  | { type: "UPDATE_ROOM"; payload: Room }
   | { type: "ADD_RESERVATION"; payload: Reservation }
+  | { type: "UPDATE_RESERVATION"; payload: Reservation }
   | { type: "ADD_MOVIES"; payload: Movie[] }
   | { type: "ADD_ROOMS"; payload: Room[] }
   | { type: "ADD_RESERVATIONS"; payload: Reservation[] }
   | { type: "SELECTED_MOVIE"; payload: Movie }
   | { type: "SELECTED_ROOM"; payload: Room }
   | { type: "SELECTED_RESERVATION"; payload: Reservation }
+  | { type: "DELETE_RESERVATION"; payload: Reservation }
   | { type: "LIST_MOVIES" }
   | { type: "LIST_ROOMS" }
   | { type: "LIST_RESERVATIONS" };
@@ -77,16 +75,32 @@ function reducer(state: State, action: Action): State {
     case "ADD_MOVIE":
       return { ...state, movies: [...state.movies, action.payload] };
 
+    case "ADD_MOVIES":
+      return { ...state, movies: [...state.movies, ...action.payload] };
     case "ADD_ROOM":
       return { ...state, rooms: [...state.rooms, action.payload] };
 
+    case "SELECTED_MOVIE":
+      return {
+        ...state,
+        selectedMovie: action.payload
+      };
+    case "REMOVE_MOVIE":
+      return {
+        ...state,
+        movies: state.movies.filter((movie: any) => movie.id !== action.payload)
+      };
+    case "REMOVE_ROOM":
+      // Eliminar sala de la lista
+      return {
+        ...state,
+        rooms: state.rooms.filter((room: any) => room.name !== action.payload)
+      };
     case "ADD_RESERVATION":
       return {
         ...state,
         reservations: [...state.reservations, action.payload]
       };
-    case "ADD_MOVIES":
-      return { ...state, movies: [...state.movies, ...action.payload] };
 
     case "ADD_ROOMS":
       return { ...state, rooms: [...state.rooms, ...action.payload] };
@@ -102,15 +116,31 @@ function reducer(state: State, action: Action): State {
         ...state,
         selectedRoom: action.payload
       };
+    // case "DELETE_RESERVATION":
+    //   return {
+    //     ...state,
+    //     reservations: state.reservations.filter(
+    //       (reservation) => reservation.id !== action.payload
+    //     )
+    //   };
+    case "UPDATE_ROOM":
+      return {
+        ...state,
+        rooms: state.rooms.map((room) =>
+          room.id === action.payload.id ? { ...room, ...action.payload } : room
+        )
+      };
+    case "UPDATE_MOVIE":
+      return {
+        ...state,
+        movies: state.movies.map((movie) =>
+          movie.id === action.payload.id ? action.payload : movie
+        )
+      };
     case "SELECTED_RESERVATION":
       return {
         ...state,
         selectedReservation: action.payload
-      };
-    case "SELECTED_MOVIE":
-      return {
-        ...state,
-        selectedMovie: action.payload
       };
     case "LIST_MOVIES":
       return state;

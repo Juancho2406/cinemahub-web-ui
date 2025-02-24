@@ -88,7 +88,7 @@ $border-color: #ddd;
         cursor: pointer;
         font-weight: bold;
         transition: color 0.3s ease;
-
+        width: fit-content;
         // Hover: Cambia el color del botón al pasar el ratón
         &:hover {
             color: darken($red, 10%);

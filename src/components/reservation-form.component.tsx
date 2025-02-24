@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext, Reservation } from "../hooks/context";
-import { createReservation } from "../services/reservation.service";
-import MapSeats from "./map-seats-component";
+import { ReservationService } from "../services/reservation.service";
+import { MapSeats } from "./map-seats-component";
 
 const ReservationForm = () => {
   const { state, dispatch } = useAppContext();
 
-  const [movieId, setMovieId] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.movieId : ""
+  const [movieName, setmovieName] = useState<string>(
+    state.selectedReservation ? state.selectedReservation.movieName : ""
   );
-  const [roomId, setRoomId] = useState<string>(
-    state.selectedReservation ? state.selectedReservation.roomId : ""
+  const [roomName, setroomName] = useState<string>(
+    state.selectedReservation ? state.selectedReservation.roomName : ""
   );
   const [schedule, setSchedule] = useState<string>(
     state.selectedReservation ? state.selectedReservation.schedule : ""
   );
-  const [selectedSeats, setSelectedSeats] = useState<number[]>(
-    state.selectedReservation ? state.selectedReservation.selectedSeats : []
+  const [reservedSeats, setreservedSeats] = useState<string[]>(
+    state.selectedReservation?.reservedSeats ?? []
   );
-  const [email, setEmail] = useState<string>(""); 
-  const [sendConfirmationEmail, setSendConfirmationEmail] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>(
+    state.selectedReservation ? state.selectedReservation.email : ""
+  );
+  const [sendConfirmationEmail, setSendConfirmationEmail] = useState<boolean>(
+    state.selectedReservation ? true : false
+  );
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    if (name === "movieId") setMovieId(value);
-    if (name === "roomId") setRoomId(value);
+    if (name === "movieName") setmovieName(value);
+    if (name === "roomName") setroomName(value);
     if (name === "schedule") setSchedule(value);
     if (name === "email") setEmail(value);
     if (name === "sendConfirmationEmail" && "checked" in e.target) {
@@ -34,37 +38,44 @@ const ReservationForm = () => {
     }
   };
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const newReservation: Reservation = {
-      movieId,
-      roomId,
+      movieName,
+      roomName,
       schedule,
-      selectedSeats,
+      reservedSeats,
       email,
-      sendConfirmationEmail,
+      sendConfirmationEmail
     };
 
-    createReservation(newReservation);
-    dispatch({ type: "ADD_RESERVATION", payload: newReservation });
+    if (state.selectedReservation) {
+      // Si hay una reserva seleccionada, actualizamos
+      await ReservationService.updateReservation(newReservation);
+      dispatch({ type: "UPDATE_RESERVATION", payload: newReservation });
+    } else {
+      // Si no hay una reserva seleccionada, creamos una nueva
+      await ReservationService.createReservation(newReservation);
+      dispatch({ type: "ADD_RESERVATION", payload: newReservation });
+    }
 
     // Limpiar formulario
-    setMovieId("");
-    setRoomId("");
+    setmovieName("");
+    setroomName("");
     setSchedule("");
-    setSelectedSeats([]);
+    setreservedSeats([]);
     setEmail("");
     setSendConfirmationEmail(false);
   };
 
   useEffect(() => {
     if (state.selectedReservation) {
-      setMovieId(state.selectedReservation.movieId);
-      setRoomId(state.selectedReservation.roomId);
+      // Llenar los campos con los datos de la reserva seleccionada
+      setmovieName(state.selectedReservation.movieName);
+      setroomName(state.selectedReservation.roomName);
       setSchedule(state.selectedReservation.schedule);
-      setSelectedSeats(state.selectedReservation.selectedSeats);
+      setreservedSeats(state.selectedReservation.reservedSeats ?? []);
       setEmail(state.selectedReservation.email || "");
       setSendConfirmationEmail(
         state.selectedReservation.sendConfirmationEmail || false
@@ -72,22 +83,21 @@ const ReservationForm = () => {
     }
   }, [state.selectedReservation]);
 
-  const room = state.rooms.find((room) => room.id === roomId);
-
-
-
-
   return (
     <div>
-      <h2>{state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}</h2>
+      <h2>
+        {state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}
+      </h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="movieId" className="input-label">Película:</label>
+          <label htmlFor="movieName" className="input-label">
+            Película:
+          </label>
           <select
             className="select-custom"
-            id="movieId"
-            name="movieId"
-            value={movieId}
+            id="movieName"
+            name="movieName"
+            value={movieName}
             onChange={handleChange}
             required
           >
@@ -101,12 +111,14 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <label htmlFor="roomId" className="input-label">Sala:</label>
+          <label htmlFor="roomName" className="input-label">
+            Sala:
+          </label>
           <select
             className="select-custom"
-            id="roomId"
-            name="roomId"
-            value={roomId}
+            id="roomName"
+            name="roomName"
+            value={roomName}
             onChange={handleChange}
             required
           >
@@ -120,7 +132,9 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <label htmlFor="schedule" className="input-label">Horario:</label>
+          <label htmlFor="schedule" className="input-label">
+            Horario:
+          </label>
           <input
             className="input-custom"
             type="text"
@@ -133,7 +147,9 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <label htmlFor="email" className="input-label">Correo electrónico:</label>
+          <label htmlFor="email" className="input-label">
+            Correo electrónico:
+          </label>
           <input
             type="email"
             id="email"
@@ -164,7 +180,9 @@ const ReservationForm = () => {
 
         <div>
           <button type="submit" className="btn-custom">
-            {state.selectedReservation ? "Actualizar Reserva" : "Registrar Reserva"}
+            {state.selectedReservation
+              ? "Actualizar Reserva"
+              : "Registrar Reserva"}
           </button>
         </div>
       </form>

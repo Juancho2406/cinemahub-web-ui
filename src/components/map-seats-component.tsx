@@ -2,24 +2,29 @@ import React, { useState, useEffect } from "react";
 import { useAppContext } from "../hooks/context";
 import { CheckCircle, Circle } from "react-feather";
 
-const MapSeats = ({ selectedMovie, onSelectRoom }: any) => {
+export const MapSeats = () => {
   const { state } = useAppContext();
   const room = state.selectedRoom;
 
-  console.log(room)
-  const [selectedSeats, setSelectedSeats] = useState<number[]>(
-    state.selectedReservation ? state.selectedReservation.selectedSeats : []
+  if (room?.name === "") {
+    return <></>;
+  }
+
+  const [selectedSeats, setSelectedSeats] = useState<string[]>(
+    state.selectedReservation?.reservedSeats || []
   );
 
+  // useEffect to update selectedSeats when reservation changes
   useEffect(() => {
     if (state.selectedReservation) {
-      setSelectedSeats(state.selectedReservation.selectedSeats);
+      setSelectedSeats(state.selectedReservation.reservedSeats ?? []);
     }
   }, [state.selectedReservation]);
 
-  const handleSeatChange = (seat: number) => {
+  // Function to handle seat selection or deselection
+  const handleSeatChange = (seat: string) => {
     setSelectedSeats((prevSeats) => {
-      // Si el asiento ya está seleccionado, lo desmarcamos, si no lo agregamos.
+      // Si el asiento ya está seleccionado, lo desmarcamos
       if (prevSeats.includes(seat)) {
         return prevSeats.filter((s) => s !== seat); // Elimina el asiento de la lista
       } else {
@@ -28,18 +33,22 @@ const MapSeats = ({ selectedMovie, onSelectRoom }: any) => {
     });
   };
 
+  // Function to render seats
   const renderSeats = () => {
     const rows = room?.seats || []; // Obtener las filas de asientos
 
     return rows.map((row: any, rowIndex: number) => (
       <div key={rowIndex} className="seat-row">
         {row.map((seat: string) => {
-          const seatNumber = Number(seat); // Asegurarse de que el asiento sea un número
-          const isSelected = selectedSeats.includes(seatNumber); // Verificamos si está seleccionado
-          const isReserved = room?.reservedSeats?.includes(seatNumber.toString()); // Verificamos si está reservado
+          const isSelected = selectedSeats.includes(seat); // Verificamos si está seleccionado
+          const isReserved = room?.reservedSeats?.includes(seat); // Verificamos si está reservado
 
           return (
-            <div key={seat} className="seat-container">
+            <div
+              key={seat}
+              className="seat-container"
+              onClick={() => !isReserved && handleSeatChange(seat)} // Solo selecciona si no está reservado
+            >
               <label>
                 {/* Si el asiento está seleccionado, usamos el CheckCircle */}
                 {isSelected ? (
@@ -48,7 +57,6 @@ const MapSeats = ({ selectedMovie, onSelectRoom }: any) => {
                       color: "green",
                       cursor: isReserved ? "not-allowed" : "pointer",
                     }}
-                    onClick={() => !isReserved && handleSeatChange(seatNumber)} // Solo selecciona si no está reservado
                   />
                 ) : (
                   <Circle
@@ -56,7 +64,6 @@ const MapSeats = ({ selectedMovie, onSelectRoom }: any) => {
                       color: isReserved ? "gray" : "lightgray",
                       cursor: isReserved ? "not-allowed" : "pointer",
                     }}
-                    onClick={() => !isReserved && handleSeatChange(seatNumber)} // Solo selecciona si no está reservado
                   />
                 )}
                 {/* Texto del número de asiento */}
@@ -91,5 +98,3 @@ const MapSeats = ({ selectedMovie, onSelectRoom }: any) => {
     </div>
   );
 };
-
-export default MapSeats;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { useCinemaServices } from "../hooks/serviceHooks";
 import MovieList from "../components/movie-list.component";
 import RoomList from "../components/room-list.component";
@@ -12,7 +12,10 @@ import { useAppContext } from "../hooks/context";
 export const CinemaHubComponent = () => {
   const { loading } = useCinemaServices(); // Obtiene el estado de carga
   const { state } = useAppContext();
-  console.log(state)
+
+  useEffect(() => {
+    console.log(state);
+  }, [state]);
   if (loading) {
     return <Loader />;
   }

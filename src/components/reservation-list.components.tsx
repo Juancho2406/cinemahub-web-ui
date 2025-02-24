@@ -1,8 +1,18 @@
 import React from "react";
-import { useAppContext } from "../hooks/context";
+import { Reservation, useAppContext } from "../hooks/context";
+import { ReservationService } from "../services/reservation.service";  // Asegúrate de importar el servicio
 
 const ReservationList = ({ selectedRoom, selectedMovie }: any) => {
-  const { state } = useAppContext();
+  const { state, dispatch } = useAppContext();
+
+  // Función para manejar la eliminación de una reserva
+  const handleDelete = (reservation: Reservation) => {
+    // Llamar al servicio para borrar la reserva en la base de datos
+    ReservationService.deleteReservation(reservation);
+
+    // Actualizar el estado para eliminar la reserva de la lista
+    // dispatch({ type: "DELETE_RESERVATION", payload: reservation });
+  };
 
   return (
     <div>
@@ -11,11 +21,13 @@ const ReservationList = ({ selectedRoom, selectedMovie }: any) => {
         {state.reservations.map((reservation, index) => (
           <li key={index} className="list-item">
             <div className="item-content">
-              Película: {reservation.movieId} - Sala: {reservation.roomId} -
+              Película: {reservation.movieName} - Sala: {reservation.roomName} -
               Horario: {reservation.schedule} - Asientos:{" "}
-              {reservation.selectedSeats.join(", ")}
             </div>
-            <div className="item-action">Eliminar</div>
+            <div className="item-action">
+              {/* Aquí asignamos el handleDelete a cada reserva */}
+              <button onClick={() => handleDelete(reservation)}>Eliminar</button>
+            </div>
           </li>
         ))}
       </ul>

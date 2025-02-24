@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext, Movie } from "../hooks/context"; // Asegúrate de tener acceso al contexto
-import { createMovie } from "../services/movie.service";
+import { MovieService } from "../services/movie.service";
 
 const MovieForm = () => {
   const { dispatch, state } = useAppContext();
@@ -11,8 +11,8 @@ const MovieForm = () => {
   const [genre, setGenre] = useState<string>(
     state.selectedMovie ? state.selectedMovie.genre : ""
   );
-  const [duration, setDuration] = useState<number>(
-    state.selectedMovie ? state.selectedMovie.duration : 0
+  const [duration, setDuration] = useState<number | null>(
+    state.selectedMovie ? state.selectedMovie.duration : null
   );
   const [rating, setRating] = useState<string>(
     state.selectedMovie ? state.selectedMovie.rating : ""
@@ -22,26 +22,52 @@ const MovieForm = () => {
     const { name, value } = e.target;
     if (name === "title") setTitle(value);
     if (name === "genre") setGenre(value);
-    if (name === "duration") setDuration(Number(value));
     if (name === "rating") setRating(value);
+    if (name === "duration") {
+      if (value === "" || /^[0-9\b]+$/.test(value)) {
+        setDuration(Number(value));
+      } else {
+        // Limpiar el campo si se intentan ingresar letras
+        setDuration(null);
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+  
+    // Crear el objeto de la película
     const newMovie: Movie = {
-      id: Date.now().toString(),
+      id: state.selectedMovie ? state.selectedMovie.id : Date.now().toString(), // Si hay una película seleccionada, mantén el mismo ID
       title,
       genre,
-      duration,
-      rating
+      duration: duration || 0,
+      rating,
     };
-    createMovie(newMovie);
-    dispatch({ type: "ADD_MOVIES", payload: [newMovie] });
+  
+    if (state.selectedMovie) {
+      // Si hay una película seleccionada, actualizamos
+      MovieService.updateMovie(newMovie); // Suponiendo que tienes un servicio para actualizar
+      dispatch({
+        type: "UPDATE_MOVIE",
+        payload: newMovie,
+      });
+    } else {
+      // Si no hay una película seleccionada, creamos una nueva
+      MovieService.createMovie(newMovie);
+      dispatch({
+        type: "ADD_MOVIES",
+        payload: [newMovie],
+      });
+    }
+  
+    // Limpiar los campos después de la acción
     setTitle("");
     setGenre("");
     setDuration(0);
     setRating("");
   };
+  
 
   useEffect(() => {
     if (state.selectedMovie) {
@@ -92,15 +118,16 @@ const MovieForm = () => {
           </label>
           <input
             className="input-custom"
-            type="number"
+            type="text"
             id="duration"
             name="duration"
-            value={duration}
+            value={duration || undefined}
             onChange={handleChange}
             required
+            pattern="^[0-9]*$"
+            placeholder="Ingresa la duración en minutos"
           />
         </div>
-
         <div>
           <label htmlFor="rating" className="input-label">
             Clasificación:
