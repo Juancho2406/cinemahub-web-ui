@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useAppContext, Reservation } from "../hooks/context"; // Asegúrate de tener acceso al contexto
+import { useAppContext, Reservation } from "../hooks/context";
 import { createReservation } from "../services/reservation.service";
+import MapSeats from "./map-seats-component";
 
 const ReservationForm = () => {
   const { state, dispatch } = useAppContext();
 
-  // Estado local para los campos del formulario
   const [movieId, setMovieId] = useState<string>(
     state.selectedReservation ? state.selectedReservation.movieId : ""
   );
@@ -18,37 +18,24 @@ const ReservationForm = () => {
   const [selectedSeats, setSelectedSeats] = useState<number[]>(
     state.selectedReservation ? state.selectedReservation.selectedSeats : []
   );
-  const [email, setEmail] = useState<string>(""); // Nuevo estado para el correo
-  const [sendConfirmationEmail, setSendConfirmationEmail] =
-    useState<boolean>(false); // Flag para enviar correo de confirmación
+  const [email, setEmail] = useState<string>(""); 
+  const [sendConfirmationEmail, setSendConfirmationEmail] = useState<boolean>(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-
-    // Para los campos de tipo input y select
     if (name === "movieId") setMovieId(value);
     if (name === "roomId") setRoomId(value);
     if (name === "schedule") setSchedule(value);
-    if (name === "email") setEmail(value); // Manejo del correo
-
-    // Para el checkbox, verificamos si el evento es de tipo CheckboxChangeEvent
+    if (name === "email") setEmail(value);
     if (name === "sendConfirmationEmail" && "checked" in e.target) {
-      setSendConfirmationEmail(e.target.checked); // `checked` existe en CheckboxChangeEvent
+      setSendConfirmationEmail(e.target.checked);
     }
   };
 
-  const handleSeatChange = (seat: string) => {
-    setSelectedSeats((prevSeats: any) =>
-      prevSeats.includes(seat)
-        ? prevSeats.filter((s: any) => s !== seat)
-        : [...prevSeats, seat]
-    );
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log("Se ejecuto el form", e);
     e.preventDefault();
 
     const newReservation: Reservation = {
@@ -56,21 +43,20 @@ const ReservationForm = () => {
       roomId,
       schedule,
       selectedSeats,
-      email, // Agregar el correo al objeto de la reserva
-      sendConfirmationEmail // Agregar el flag para el correo de confirmación
+      email,
+      sendConfirmationEmail,
     };
 
     createReservation(newReservation);
-
     dispatch({ type: "ADD_RESERVATION", payload: newReservation });
 
-    // Limpiar el formulario
+    // Limpiar formulario
     setMovieId("");
     setRoomId("");
     setSchedule("");
     setSelectedSeats([]);
-    setEmail(""); // Limpiar el correo
-    setSendConfirmationEmail(false); // Limpiar el flag
+    setEmail("");
+    setSendConfirmationEmail(false);
   };
 
   useEffect(() => {
@@ -79,99 +65,24 @@ const ReservationForm = () => {
       setRoomId(state.selectedReservation.roomId);
       setSchedule(state.selectedReservation.schedule);
       setSelectedSeats(state.selectedReservation.selectedSeats);
-      setEmail(state.selectedReservation.email || ""); // Si hay un correo en la reserva seleccionada
+      setEmail(state.selectedReservation.email || "");
       setSendConfirmationEmail(
         state.selectedReservation.sendConfirmationEmail || false
-      ); // Si hay un flag para enviar correo
+      );
     }
   }, [state.selectedReservation]);
 
   const room = state.rooms.find((room) => room.id === roomId);
 
-  const renderSeats = () => {
-    const rows = room?.seats || []; // Suponiendo que `seats` es una matriz 2D, donde cada fila es un arreglo de asientos
 
-    return rows.map((row, rowIndex) => (
-      <div
-        key={rowIndex}
-        style={{
-          display: "flex",
-          justifyContent: "space-evenly", // Distribuye los asientos uniformemente en cada fila
-          marginBottom: "10px",
-          gap: "10px", // Espacio entre los asientos
-          width: "calc(100% - 20px)", // Ajusta el ancho para dar margen a los lados
-          margin: "0 auto" // Centra la fila de asientos en la pantalla
-        }}
-      >
-        {row.map((seat: string) => (
-          <div
-            key={seat}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              marginBottom: "5px"
-            }}
-          >
-            <label
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                margin: 0
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={selectedSeats.includes(Number(seat))}
-                onChange={() => handleSeatChange(seat)}
-                disabled={room?.reservedSeats?.includes(seat)} // Deshabilitado si el asiento está reservado
-                style={{
-                  marginBottom: "5px",
-                  transform: "scale(1.2)"
-                }}
-              />
-              <span
-                style={{
-                  fontSize: "12px",
-                  textAlign: "center",
-                  marginTop: "3px"
-                }}
-              >
-                {seat}
-              </span>
-            </label>
-          </div>
-        ))}
-      </div>
-    ));
-  };
 
-  const screenStyle: React.CSSProperties = {
-    width: "60%", // Ajusta el ancho de la pantalla (puedes modificarlo según el diseño)
-    height: "30px", // Alto de la pantalla
-    backgroundColor: "#000", // Color de fondo de la pantalla
-    color: "#fff", // Color del texto de la pantalla
-    display: "flex",
-    justifyContent: "center", // Centra el texto dentro de la pantalla
-    alignItems: "center", // Centra el texto verticalmente dentro de la pantalla
-    marginBottom: "20px", // Espacio entre la pantalla y los asientos
-    borderRadius: "5px", // Bordes redondeados
-    fontWeight: "bold", // Textos más gruesos para la pantalla
-    textTransform: "uppercase" // Texto en mayúsculas
-  };
 
   return (
     <div>
-      <h2>
-        {state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}
-      </h2>
+      <h2>{state.selectedReservation ? "Editar Reserva" : "Registrar Reserva"}</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="movieId" className="input-label">
-            Película:
-          </label>
+          <label htmlFor="movieId" className="input-label">Película:</label>
           <select
             className="select-custom"
             id="movieId"
@@ -190,7 +101,7 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <label htmlFor="roomId">Sala:</label>
+          <label htmlFor="roomId" className="input-label">Sala:</label>
           <select
             className="select-custom"
             id="roomId"
@@ -209,9 +120,7 @@ const ReservationForm = () => {
         </div>
 
         <div>
-          <label htmlFor="schedule" className="input-label">
-            Horario:
-          </label>
+          <label htmlFor="schedule" className="input-label">Horario:</label>
           <input
             className="input-custom"
             type="text"
@@ -223,11 +132,8 @@ const ReservationForm = () => {
           />
         </div>
 
-        {/* Campo para el correo electrónico */}
         <div>
-          <label htmlFor="email" className="input-label">
-            Correo electrónico:
-          </label>
+          <label htmlFor="email" className="input-label">Correo electrónico:</label>
           <input
             type="email"
             id="email"
@@ -240,7 +146,6 @@ const ReservationForm = () => {
           />
         </div>
 
-        {/* Campo para el flag de confirmación por correo */}
         <div>
           <label htmlFor="sendConfirmationEmail" className="input-label">
             <input
@@ -255,17 +160,11 @@ const ReservationForm = () => {
           </label>
         </div>
 
-        <div>
-          <label>Mapa de Asientos:</label>
-          <div style={screenStyle}>Pantalla</div>
-          <div id="seatsContainer">{renderSeats()}</div>
-        </div>
+        <MapSeats></MapSeats>
 
         <div>
-          <button type="submit">
-            {state.selectedReservation
-              ? "Actualizar Reserva"
-              : "Registrar Reserva"}
+          <button type="submit" className="btn-custom">
+            {state.selectedReservation ? "Actualizar Reserva" : "Registrar Reserva"}
           </button>
         </div>
       </form>

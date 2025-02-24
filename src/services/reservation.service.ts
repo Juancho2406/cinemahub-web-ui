@@ -45,3 +45,19 @@ export const getReservations = async (): Promise<Reservation[]> => {
     throw error; // Lanza el error para manejarlo en la parte que lo llame
   }
 };
+
+export const deleteReservation = async (reservationId: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/reservations/${reservationId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*"
+      }
+    });
+    return response.data; // Devuelve la respuesta del backend (puede ser un mensaje de éxito)
+  } catch (error) {
+    console.error("Error deleting reservation:", error);
+    throw error; // Lanza el error para manejarlo en la parte que lo llame
+  }
+};

@@ -38,3 +38,19 @@ export const getMovies = async () => {
     throw error;
   }
 };
+
+export const deleteMovie = async (title: string) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/movies/${title}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting movie:", error);
+    throw error;
+  }
+};
+
