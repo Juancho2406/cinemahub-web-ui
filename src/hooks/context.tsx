@@ -10,8 +10,8 @@ export interface Movie {
   id: string;
   title: string;
   genre: string;
-  duration: number; 
-  rating: string; 
+  duration: number;
+  rating: string;
 }
 
 export interface Room {
@@ -25,9 +25,11 @@ export interface Room {
 export interface Reservation {
   movieId: string;
   roomId: string;
-  schedule: string; 
+  schedule: string;
   selectedSeats: number[];
   reservedSeats?: string[];
+  email: string;
+  sendConfirmationEmail?: boolean;
 }
 
 interface State {
@@ -62,6 +64,7 @@ type Action =
   | { type: "ADD_MOVIES"; payload: Movie[] }
   | { type: "ADD_ROOMS"; payload: Room[] }
   | { type: "ADD_RESERVATIONS"; payload: Reservation[] }
+  | { type: "SELECTED_MOVIE"; payload: Movie }
   | { type: "SELECTED_ROOM"; payload: Room }
   | { type: "SELECTED_RESERVATION"; payload: Reservation }
   | { type: "LIST_MOVIES" }
@@ -99,16 +102,20 @@ function reducer(state: State, action: Action): State {
         ...state,
         selectedRoom: action.payload
       };
-      case "SELECTED_RESERVATION":
-        return {
-          ...state,
-          selectedReservation: action.payload
-        };
+    case "SELECTED_RESERVATION":
+      return {
+        ...state,
+        selectedReservation: action.payload
+      };
+    case "SELECTED_MOVIE":
+      return {
+        ...state,
+        selectedMovie: action.payload
+      };
     case "LIST_MOVIES":
       return state;
 
     case "LIST_ROOMS":
-
       return state;
 
     case "LIST_RESERVATIONS":

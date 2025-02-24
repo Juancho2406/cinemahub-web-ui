@@ -6,10 +6,11 @@ import ReservationList from "../components/reservation-list.components";
 import MovieForm from "../components/movie-form.component";
 import RoomForm from "../components/room-form.component";
 import ReservationForm from "../components/reservation-form.component";
+
 export const CinemaHubComponent = () => {
   useCinemaServices();
   return (
-    <div>
+    <div className="cinemaHubPage">
       <MovieList></MovieList>
       <MovieForm></MovieForm>
       <RoomList></RoomList>

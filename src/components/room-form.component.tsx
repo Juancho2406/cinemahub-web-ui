@@ -3,10 +3,14 @@ import { useAppContext, Room } from "../hooks/context"; // Asegúrate de tener a
 import { createRoom } from "../services/room.service";
 
 const RoomForm = () => {
-  const { state,dispatch } = useAppContext();
+  const { state, dispatch } = useAppContext();
 
-  const [name, setName] = useState<string>(state.selectedRoom ? state.selectedRoom.name : "");
-  const [capacity, setCapacity] = useState<number>(state.selectedRoom ? state.selectedRoom.capacity : 0);
+  const [name, setName] = useState<string>(
+    state.selectedRoom ? state.selectedRoom.name : ""
+  );
+  const [capacity, setCapacity] = useState<number>(
+    state.selectedRoom ? state.selectedRoom.capacity : 0
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -17,7 +21,7 @@ const RoomForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const newRoom: Room = { id: Date.now().toString(), name, capacity };
-    createRoom(newRoom)
+    createRoom(newRoom);
     dispatch({ type: "ADD_ROOMS", payload: [newRoom] });
     setName("");
     setCapacity(0);
@@ -35,8 +39,11 @@ const RoomForm = () => {
       <h2>{state.selectedRoom ? "Editar Sala" : "Registrar Sala"}</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Nombre:</label>
+          <label htmlFor="name" className="input-label">
+            Nombre:
+          </label>
           <input
+            className="input-custom"
             type="text"
             id="name"
             name="name"
@@ -47,8 +54,11 @@ const RoomForm = () => {
         </div>
 
         <div>
-          <label htmlFor="capacity">Capacidad:</label>
+          <label htmlFor="capacity" className="input-label">
+            Capacidad:
+          </label>
           <input
+            className="input-custom"
             type="number"
             id="capacity"
             name="capacity"
@@ -59,7 +69,9 @@ const RoomForm = () => {
         </div>
 
         <div>
-          <button type="submit">{state.selectedRoom ? "Actualizar Sala" : "Registrar Sala"}</button>
+          <button type="submit">
+            {state.selectedRoom ? "Actualizar Sala" : "Registrar Sala"}
+          </button>
         </div>
       </form>
     </div>

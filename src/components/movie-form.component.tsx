@@ -2,15 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useAppContext, Movie } from "../hooks/context"; // Asegúrate de tener acceso al contexto
 import { createMovie } from "../services/movie.service";
 
-
-
 const MovieForm = () => {
   const { dispatch, state } = useAppContext();
 
-  const [title, setTitle] = useState<string>(state.selectedMovie ? state.selectedMovie.title : "");
-  const [genre, setGenre] = useState<string>(state.selectedMovie ? state.selectedMovie.genre : "");
-  const [duration, setDuration] = useState<number>(state.selectedMovie ? state.selectedMovie.duration : 0);
-  const [rating, setRating] = useState<string>(state.selectedMovie ? state.selectedMovie.rating : "");
+  const [title, setTitle] = useState<string>(
+    state.selectedMovie ? state.selectedMovie.title : ""
+  );
+  const [genre, setGenre] = useState<string>(
+    state.selectedMovie ? state.selectedMovie.genre : ""
+  );
+  const [duration, setDuration] = useState<number>(
+    state.selectedMovie ? state.selectedMovie.duration : 0
+  );
+  const [rating, setRating] = useState<string>(
+    state.selectedMovie ? state.selectedMovie.rating : ""
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,8 +28,14 @@ const MovieForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const newMovie: Movie = { id: Date.now().toString(), title, genre, duration, rating };
-    createMovie(newMovie)
+    const newMovie: Movie = {
+      id: Date.now().toString(),
+      title,
+      genre,
+      duration,
+      rating
+    };
+    createMovie(newMovie);
     dispatch({ type: "ADD_MOVIES", payload: [newMovie] });
     setTitle("");
     setGenre("");
@@ -44,12 +56,15 @@ const MovieForm = () => {
     <div>
       <h2>{state.selectedMovie ? "Editar Película" : "Registrar Película"}</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="title">Título:</label>
+        <div className="form-group">
+          <label htmlFor="title" className="input-label">
+            Título:
+          </label>
           <input
             type="text"
             id="title"
             name="title"
+            className="input-custom"
             value={title}
             onChange={handleChange}
             required
@@ -57,8 +72,11 @@ const MovieForm = () => {
         </div>
 
         <div>
-          <label htmlFor="genre">Género:</label>
+          <label htmlFor="genre" className="input-label">
+            Género:
+          </label>
           <input
+            className="input-custom"
             type="text"
             id="genre"
             name="genre"
@@ -69,8 +87,11 @@ const MovieForm = () => {
         </div>
 
         <div>
-          <label htmlFor="duration">Duración (minutos):</label>
+          <label htmlFor="duration" className="input-label">
+            Duración (minutos):
+          </label>
           <input
+            className="input-custom"
             type="number"
             id="duration"
             name="duration"
@@ -81,8 +102,11 @@ const MovieForm = () => {
         </div>
 
         <div>
-          <label htmlFor="rating">Clasificación:</label>
+          <label htmlFor="rating" className="input-label">
+            Clasificación:
+          </label>
           <input
+            className="input-custom"
             type="text"
             id="rating"
             name="rating"
@@ -93,7 +117,9 @@ const MovieForm = () => {
         </div>
 
         <div>
-          <button type="submit">{state.selectedMovie ? "Actualizar Película" : "Registrar Película"}</button>
+          <button type="submit">
+            {state.selectedMovie ? "Actualizar Película" : "Registrar Película"}
+          </button>
         </div>
       </form>
     </div>

@@ -4,9 +4,11 @@ import { Reservation } from "../hooks/context";
 
 export const createReservation = async (reservationData: Reservation) => {
   const reservationBody = {
-    movie: reservationData.movieId,
-    room: reservationData.roomId,
-    seats: reservationData.reservedSeats
+    movieId: reservationData.movieId,
+    roomId: reservationData.roomId,
+    seats: JSON.stringify([]),
+    email: reservationData.email,
+    sendConfirmationEmail: reservationData.sendConfirmationEmail
   }
   try {
     const response = await axios.post(

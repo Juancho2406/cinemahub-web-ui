@@ -1,0 +1,168 @@
+// Colores
+$red: #E50914; 
+$white-color: #ffffff; // Color blanco
+$light-grey: #f7f7f7d9; // Color gris claro para el fondo de los items
+$border-color: #ddd; 
+
+// Clase base para los select
+.select-custom {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid $red;
+    border-radius: 4px;
+    background-color: $white-color;
+    color: #333; // Color de texto más oscuro para mejor contraste
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    transition: all 0.3s ease;
+
+    // Estilo cuando el select está enfocado
+    &:focus {
+        border-color: $red;
+        outline: none;
+        box-shadow: 0 0 5px rgba(229, 9, 20, 0.5); // Efecto de sombra suave al enfocar
+    }
+
+    // Estilo cuando el select tiene un valor seleccionado
+    option {
+        background-color: $white-color;
+        color: #333;
+        padding: 10px;
+        transition: all 0.3s ease;
+    }
+
+    // Cambios de estilo al pasar el ratón sobre el select
+    &:hover {
+        border-color: darken($red, 10%); // Oscurece el rojo al hacer hover
+    }
+}
+
+// Estilo general para las listas
+.list-custom {
+    list-style-type: none; // Quitamos los puntos predeterminados de las listas
+    padding: 0; // Eliminamos el padding predeterminado
+    margin: 0; // Eliminamos el margin predeterminado
+    width: 100%; // Aseguramos que la lista ocupe el 100% del ancho disponible
+}
+
+// Estilo para cada elemento de la lista
+.list-custom li {
+    padding: 20px; // Espaciado dentro de la tarjeta
+    background-color: $white-color; // Fondo blanco para cada tarjeta
+    border: 1px solid #ddd; // Borde gris claro
+    margin-bottom: 20px; // Espaciado entre las tarjetas
+    border-radius: 8px; // Bordes redondeados
+    display: flex;
+    flex-direction: column; // Asegura que el contenido se apile verticalmente
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Sombra sutil para dar profundidad
+
+    // Efecto al pasar el ratón (hover)
+    &:hover {
+        background-color: $light-grey; // Fondo gris claro al hacer hover
+        border-color: $red; // Borde rojo cuando el cursor está sobre el elemento
+        transform: translateY(-5px); // Efecto de desplazamiento hacia arriba
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); // Aumenta la sombra al hacer hover
+    }
+
+    // Contenido dentro de cada tarjeta
+    .item-content {
+        color: #333; // Color de texto
+        font-size: 1.2rem;
+        font-weight: 600; // Peso de la fuente para destacar el título
+        margin-bottom: 10px; // Espaciado entre el título y la descripción
+    }
+
+    // Información adicional (genero, duración)
+    .item-description {
+        color: #555; // Color más suave para la descripción
+        font-size: 1rem;
+        margin-bottom: 10px; // Espaciado entre la descripción y el botón
+    }
+
+    // Estilo para el ícono o botón de la derecha (Eliminar)
+    .item-action {
+        color: $red; // Color rojo para el ícono o el botón de eliminar
+        font-size: 1.2rem;
+        cursor: pointer;
+        font-weight: bold;
+        transition: color 0.3s ease;
+
+        // Hover: Cambia el color del botón al pasar el ratón
+        &:hover {
+            color: darken($red, 10%);
+        }
+    }
+}
+
+
+// Estilo general para los inputs
+.input-custom {
+    width: 100%; // Asegura que el input ocupe el 100% del ancho disponible
+    padding: 12px 16px; // Espaciado interno para mayor comodidad
+    background-color: $white-color; // Fondo blanco para los inputs
+    border: 1px solid $border-color; // Borde gris claro
+    border-radius: 8px; // Bordes redondeados
+    font-size: 1rem; // Tamaño de fuente adecuado
+    color: #333; // Color oscuro para el texto
+    transition: all 0.3s ease; // Transición suave para los efectos de focus y hover
+    outline: none; // Elimina el borde de enfoque predeterminado
+    margin-bottom: 15px; // Espaciado entre los campos
+
+    // Efecto de hover: cambia el borde a rojo al pasar el ratón
+    &:hover {
+        border-color: $red; // Borde rojo al hacer hover
+    }
+
+    // Efecto de focus: cambia el borde y el fondo cuando el input está enfocado
+    &:focus {
+        border-color: $red; // Borde rojo al enfocar
+        background-color: $light-grey; // Fondo gris claro al enfocar
+    }
+
+    // Estilo de placeholder
+    &::placeholder {
+        color: #aaa; // Color suave para el texto de los placeholders
+    }
+}
+
+// Estilo para los labels asociados a los inputs
+.input-label {
+    font-weight: 600; // Peso de la fuente ligeramente mayor
+    color: #333; // Color oscuro para el texto del label
+    margin-bottom: 8px; // Espaciado debajo del label
+    display: block; // Asegura que el label ocupe toda la línea
+}
+
+// Estilo del botón
+button {
+    padding: 12px 20px; // Espaciado para el botón
+    background-color: $red; // Fondo rojo
+    color: $white-color; // Texto blanco
+    font-size: 1rem; // Tamaño de fuente adecuado
+    border: none;
+    border-radius: 8px; // Bordes redondeados
+    cursor: pointer; // Cambia el cursor a mano al pasar sobre el botón
+    width: 100%; // Asegura que el botón ocupe todo el ancho disponible
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: darken($red, 10%); // Oscurece el rojo al pasar el ratón
+    }
+
+    &:focus {
+        outline: none; // Elimina el borde de enfoque predeterminado
+    }
+}
+
+// Estilo para la página del sistema (cinemaHubPage)
+.cinemaHubPage {
+    width: 80%;
+    margin: 0 auto; // Centra la página en la pantalla
+    padding: 20px; // Espaciado interior
+    background-color: #f8f8f8; // Fondo gris claro
+    border-radius: 10px; // Bordes redondeados
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Sombra sutil para un efecto de profundidad
+    font-family: 'Arial', sans-serif; // Fuente legible y moderna
+}

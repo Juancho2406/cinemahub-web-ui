@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useAppContext,Movie, Room, Reservation } from "./context"; 
-import { ensureSeats } from "../utils/utilsSeats";
 import { getMovies } from "../services/movie.service";
 import { getRooms } from "../services/room.service";
 import { getReservations } from "../services/reservation.service";
@@ -20,10 +19,11 @@ const fetchReservations = async (): Promise<Reservation[]> => {
   let reservations:any = []
   try {
     reservations = await getReservations()
+    
   } catch (error) {
     
   }
-  return reservations
+  return []
 };
 
 export const useCinemaServices = () => {
