@@ -5,7 +5,6 @@ import { ReservationService } from "../services/reservation.service"; // Asegúr
 const ReservationList = () => {
   const { state, dispatch } = useAppContext();
   const handleDelete = (reservation: Reservation) => {
-
     ReservationService.deleteReservation(reservation);
     dispatch({ type: "DELETE_RESERVATION", payload: reservation });
   };
@@ -33,10 +32,11 @@ const ReservationList = () => {
               </span>
             </div>
 
-            <div className="item-action">
-              <button onClick={() => handleDelete(reservation)}>
-                Eliminar
-              </button>
+            <div
+              className="item-action"
+              onClick={() => handleDelete(reservation)}
+            >
+              Eliminar
             </div>
           </li>
         ))}
