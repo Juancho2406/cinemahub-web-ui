@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAppContext } from "../hooks/context";
 import { CheckCircle, Circle } from "react-feather";
 
@@ -6,19 +6,17 @@ export const MapSeats = () => {
   const { state, dispatch } = useAppContext();
   const room = state.selectedRoom;
 
-  if (room?.name === "") {
-    return <></>;
+  if (!room?.name || !room?.seats?.length) {
+    return null;
   }
 
-
   const selectedSeats = state.selectedSeats;
-
 
   useEffect(() => {
     if (state.selectedReservation) {
       dispatch({
         type: "SELECTED_SEATS",
-        payload: state.selectedReservation.reservedSeats || [],
+        payload: state.selectedReservation.reservedSeats || []
       });
     }
   }, [state.selectedReservation, dispatch]);
@@ -27,38 +25,38 @@ export const MapSeats = () => {
     dispatch({
       type: "SELECTED_SEATS",
       payload: selectedSeats?.includes(seat)
-        ? selectedSeats.filter((s) => s !== seat) 
-        : [...selectedSeats || [], seat],
+        ? selectedSeats.filter((s) => s !== seat)
+        : [...(selectedSeats || []), seat]
     });
   };
 
   const renderSeats = () => {
-    const rows = room?.seats || []; 
+    const rows =  Array.isArray(room.seats) ? room.seats : JSON.parse(room.seats || '[]')
     return rows.map((row: any, rowIndex: number) => (
       <div key={rowIndex} className="seat-row">
         {row.map((seat: string) => {
-          const isSelected = selectedSeats?.includes(seat); 
-          const isReserved = room?.reservedSeats?.includes(seat); 
+          const isSelected = selectedSeats?.includes(seat);
+          const isReserved = room?.reservedSeats?.includes(seat);
 
           return (
             <div
               key={seat}
               className="seat-container"
-              onClick={() => !isReserved && handleSeatChange(seat)} 
+              onClick={() => !isReserved && handleSeatChange(seat)}
             >
               <label>
                 {isSelected ? (
                   <CheckCircle
                     style={{
                       color: "green",
-                      cursor: isReserved ? "not-allowed" : "pointer",
+                      cursor: isReserved ? "not-allowed" : "pointer"
                     }}
                   />
                 ) : (
                   <Circle
                     style={{
                       color: isReserved ? "gray" : "lightgray",
-                      cursor: isReserved ? "not-allowed" : "pointer",
+                      cursor: isReserved ? "not-allowed" : "pointer"
                     }}
                   />
                 )}
@@ -82,14 +80,18 @@ export const MapSeats = () => {
     marginBottom: "80px",
     borderRadius: "5px",
     fontWeight: "bold",
-    textTransform: "uppercase",
+    textTransform: "uppercase"
   };
 
   return (
     <div>
-      <label>Mapa de Asientos:</label>
-      <div style={screenStyle}>Pantalla</div>
-      <div id="seatsContainer">{renderSeats()}</div>
+      {room?.seats?.length > 0 && (
+        <>
+          <label>Mapa de Asientos:</label>
+          <div style={screenStyle}>Pantalla</div>
+          <div id="seatsContainer">{renderSeats()}</div>
+        </>
+      )}
     </div>
   );
 };

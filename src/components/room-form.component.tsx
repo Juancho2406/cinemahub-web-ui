@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppContext, Room } from "../hooks/context";
 import { RoomService } from "../services/room.service";
-import { MapSeats } from "./map-seats-component";
 
 const RoomForm = () => {
   const { state, dispatch } = useAppContext();
@@ -32,7 +31,7 @@ const RoomForm = () => {
         break;
       case "capacity":
         setCapacity(numericValue);
-        updateSeats(numericValue, rows, seatsPerRow); 
+        updateSeats(numericValue, rows, seatsPerRow);
         break;
       case "rows":
         setRows(numericValue);
@@ -40,7 +39,7 @@ const RoomForm = () => {
         break;
       case "seatsPerRow":
         setSeatsPerRow(numericValue);
-        updateSeats(capacity, rows, numericValue); 
+        updateSeats(capacity, rows, numericValue);
         break;
       default:
         break;
@@ -87,30 +86,29 @@ const RoomForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    console.log(seats);
     const roomData: Room = {
-      id: state.selectedRoom?.id || Date.now().toString(), // Si es una sala existente, usa el ID
+      id: state.selectedRoom?.id || Date.now().toString(),
       name,
       capacity,
       seats
     };
 
     if (state.selectedRoom) {
-      
-      await RoomService.updateRoom(roomData); 
+      await RoomService.updateRoom(roomData);
       dispatch({ type: "UPDATE_ROOM", payload: roomData });
     } else {
-
       await RoomService.createRoom(roomData);
       dispatch({ type: "ADD_ROOMS", payload: [roomData] });
     }
 
-
+    // Reset form after submission
     setName("");
     setCapacity(0);
     setRows(0);
     setSeatsPerRow(0);
     setSeats([]);
+    dispatch({ type: "SELECTED_ROOM", payload: {} as any });
   };
 
   useEffect(() => {
@@ -121,10 +119,23 @@ const RoomForm = () => {
       setSeatsPerRow(state.selectedRoom.seats?.[0]?.length || 0);
       setSeats(state.selectedRoom.seats || []);
     }
-  }, [state.selectedRoom]); 
+  }, [state.selectedRoom]);
 
   const rowOptions = Array.from({ length: 20 }, (_, index) => index + 1);
   const seatOptions = Array.from({ length: 20 }, (_, index) => index + 1);
+
+  // Renderiza el mapa de asientos de manera estática
+  const renderSeats = () => {
+    return seats.map((row, rowIndex) => (
+      <div key={rowIndex} className="seat-row">
+        {row.map((seat, seatIndex) => (
+          <div key={seatIndex} className="seat-container">
+            <span className="seat-label">{seat}</span>
+          </div>
+        ))}
+      </div>
+    ));
+  };
 
   return (
     <div>
@@ -200,13 +211,23 @@ const RoomForm = () => {
             ))}
           </select>
         </div>
-        <MapSeats></MapSeats>
+
         <div>
           <button type="submit">
             {state.selectedRoom ? "Actualizar Sala" : "Registrar Sala"}
           </button>
         </div>
       </form>
+
+      {/* Mostrar "Mapa de Asientos" solo si hay un mapa de asientos */}
+      {seats.length > 0 && (
+        <div>
+          <div className="map-assets">
+            <label>Mapa de Asientos:</label>
+          </div>
+          {renderSeats()}
+        </div>
+      )}
     </div>
   );
 };

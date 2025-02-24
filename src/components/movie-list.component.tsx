@@ -35,9 +35,14 @@ const MovieList = () => {
                 <strong>{movie.title}</strong>
               </div>
               <div className="item-description">
+                ID: {movie.id}
+              </div>
+              <div className="item-description">
                 {movie.genre} - {movie.duration} min
               </div>
-
+              <div className="item-description">
+                Clasificacion : {movie.rating}
+              </div>
               <div
                 className="item-action"
                 onClick={() => handleDelete(movie)}

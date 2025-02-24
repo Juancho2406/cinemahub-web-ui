@@ -142,7 +142,9 @@ const MovieForm = () => {
           </select>
         </div>
         <div>
-          <button type="submit">
+          <button type="submit" style={{
+            margin: "20px"
+          }}>
             {state.selectedMovie ? "Actualizar Película" : "Registrar Película"}
           </button>
         </div>

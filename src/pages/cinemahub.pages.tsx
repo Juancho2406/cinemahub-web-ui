@@ -43,7 +43,6 @@ export const CinemaHubComponent = () => {
         )}
         {activeMenu === "reservations" && (
           <>
-            <h2>Reservaciones</h2>
             <ReservationList />
             <ReservationForm />
           </>

@@ -1,34 +1,40 @@
 import React from "react";
 import { Room, useAppContext } from "../hooks/context";
 import { RoomService } from "../services/room.service";
-import { MapSeats } from "./map-seats-component";
 
 const RoomList = () => {
   const { state, dispatch } = useAppContext();
 
   const handleDelete = async (room: Room) => {
     try {
-      await RoomService.deleteRoom(room);
-      dispatch({
+      await dispatch({
         type: "REMOVE_ROOM",
         payload: room
       });
+      await RoomService.deleteRoom(room);
     } catch (error) {
       console.error("Error deleting room:", error);
     }
   };
 
   const handleRoomClick = (room: Room) => {
+    room = {
+      ...room,
+      seats: Array.isArray(room.seats) ? room.seats : JSON.parse(room.seats || '[]')
+    };
+  
     dispatch({
       type: "SELECTED_ROOM",
       payload: room
     });
   };
+  
 
   return (
     <div>
       <ul className="list-custom">
         {state.rooms.map((room) => (
+          
           <li key={room.id}>
             <div
               className="item-content"
@@ -46,7 +52,6 @@ const RoomList = () => {
           </li>
         ))}
       </ul>
-      <MapSeats />
     </div>
   );
 };
