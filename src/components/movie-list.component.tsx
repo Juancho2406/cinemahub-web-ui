@@ -6,11 +6,13 @@ const MovieList = () => {
 
   // Función para manejar la eliminación de una película
   const handleDelete = async (movie: Movie) => {
+    console.log(movie)
     try {
       // Llamamos a la función deleteMovie y esperamos la respuesta
       await MovieService.deleteMovie(movie);
 
-      // Después de eliminar, actualizamos el estado para eliminarla de la lista
+      // Después de eliminar, actua
+      // lizamos el estado para eliminarla de la lista
       dispatch({
         type: "REMOVE_MOVIE",
         payload: movie
@@ -23,7 +25,6 @@ const MovieList = () => {
 
   return (
     <div>
-      <h1>Películas</h1>
       <ul className="list-custom">
         {state.movies.map((movie) => (
           <div

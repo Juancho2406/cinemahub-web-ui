@@ -1,39 +1,48 @@
-// Colores
-$red: #E50914; 
-$white-color: #ffffff; // Color blanco
-$light-grey: #f7f7f7d9; // Color gris claro para el fondo de los items
-$border-color: #ddd; 
+body {
+    margin: 0;
+    font-family: 'Helvetica', sans-serif;
+    /* Tipografía similar a Netflix */
+    background-color: #141414;
+    /* Fondo oscuro */
+    color: white;
+    /* Texto blanco para contraste */
+    line-height: 1.6;
+    /* Espaciado entre líneas para mejorar la legibilidad */
+}
+
+/* Ajuste de colores para elementos interactivos */
+$red: #E50914; // Rojo distintivo de Netflix <button class="citation-flag" data-index="1">
+$white-color: #ffffff; // Blanco para textos y fondos claros
+$light-grey: #f7f7f7d9; // Gris claro para fondos secundarios
+$dark-grey: #323131; // Gris oscuro para textos secundarios
 
 // Clase base para los select
 .select-custom {
     width: 100%;
     padding: 10px 15px;
-    border: 1px solid $red;
+    border: 1px solid #E50914; // Rojo distintivo de Netflix
     border-radius: 4px;
-    background-color: $white-color;
-    color: #333; // Color de texto más oscuro para mejor contraste
+    background-color: #ffffff; // Fondo blanco
+    color: #333; // Color de texto oscuro
     font-size: 1rem;
     font-family: 'Arial', sans-serif;
     transition: all 0.3s ease;
 
-    // Estilo cuando el select está enfocado
     &:focus {
-        border-color: $red;
+        border-color: #E50914;
         outline: none;
         box-shadow: 0 0 5px rgba(229, 9, 20, 0.5); // Efecto de sombra suave al enfocar
     }
 
-    // Estilo cuando el select tiene un valor seleccionado
     option {
-        background-color: $white-color;
+        background-color: #ffffff;
         color: #333;
         padding: 10px;
         transition: all 0.3s ease;
     }
 
-    // Cambios de estilo al pasar el ratón sobre el select
     &:hover {
-        border-color: darken($red, 10%); // Oscurece el rojo al hacer hover
+        border-color: darken(#E50914, 10%); // Oscurece el rojo al hacer hover
     }
 }
 
@@ -89,6 +98,7 @@ $border-color: #ddd;
         font-weight: bold;
         transition: color 0.3s ease;
         width: fit-content;
+
         // Hover: Cambia el color del botón al pasar el ratón
         &:hover {
             color: darken($red, 10%);
@@ -102,7 +112,7 @@ $border-color: #ddd;
     width: 100%; // Asegura que el input ocupe el 100% del ancho disponible
     padding: 12px 16px; // Espaciado interno para mayor comodidad
     background-color: $white-color; // Fondo blanco para los inputs
-    border: 1px solid $border-color; // Borde gris claro
+    border: 1px solid $light-grey; // Borde gris claro
     border-radius: 8px; // Bordes redondeados
     font-size: 1rem; // Tamaño de fuente adecuado
     color: #333; // Color oscuro para el texto
@@ -137,34 +147,40 @@ $border-color: #ddd;
 
 // Estilo del botón
 button {
-    padding: 12px 20px; // Espaciado para el botón
-    background-color: $red; // Fondo rojo
-    color: $white-color; // Texto blanco
-    font-size: 1rem; // Tamaño de fuente adecuado
+    padding: 12px 20px;
+    background-color: $red;
+    /* Fondo rojo */
+    color: $white-color;
+    /* Texto blanco */
+    font-size: 1rem;
     border: none;
-    border-radius: 8px; // Bordes redondeados
-    cursor: pointer; // Cambia el cursor a mano al pasar sobre el botón
-    width: 100%; // Asegura que el botón ocupe todo el ancho disponible
-    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
     &:hover {
-        background-color: darken($red, 10%); // Oscurece el rojo al pasar el ratón
+        background-color: darken($red, 10%);
+        /* Oscurece el rojo al pasar el ratón */
+        transform: scale(1.05);
+        /* Efecto de agrandamiento */
     }
 
     &:focus {
-        outline: none; // Elimina el borde de enfoque predeterminado
+        outline: none;
+        /* Elimina el borde de enfoque predeterminado */
+        box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+        /* Efecto de sombra al enfocar */
     }
 }
 
-// Estilo para la página del sistema (cinemaHubPage)
+/* Contenedor principal */
 .cinemaHubPage {
-    width: 80%;
-    margin: 0 auto; // Centra la página en la pantalla
-    padding: 20px; // Espaciado interior
-    background-color: #f8f8f8; // Fondo gris claro
-    border-radius: 10px; // Bordes redondeados
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Sombra sutil para un efecto de profundidad
-    font-family: 'Arial', sans-serif; // Fuente legible y moderna
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow-x: hidden;
+    /* Evita desplazamiento horizontal */
 }
 
 
@@ -176,34 +192,34 @@ button {
     gap: 12px;
     width: calc(100% - 20px);
     margin: 0 auto;
-  }
-  
-  /* Estilo para los contenedores de los asientos */
-  .seat-container {
+}
+
+/* Estilo para los contenedores de los asientos */
+.seat-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
-  }
-  
-  /* Estilo para los inputs de los asientos */
-  .seat-checkbox {
+}
+
+/* Estilo para los inputs de los asientos */
+.seat-checkbox {
     transform: scale(1.5);
     margin-bottom: 8px;
     cursor: pointer;
-  }
-  
-  /* Estilo para las etiquetas de los asientos */
-  .seat-label {
+}
+
+/* Estilo para las etiquetas de los asientos */
+.seat-label {
     font-size: 14px;
     text-align: center;
     margin-top: 5px;
-    color: #000000;
-  }
-  
-  /* Estilo para la pantalla */
-  .screen {
+    color: #ffffff;
+}
+
+/* Estilo para la pantalla */
+.screen {
     width: 60%;
     height: 30px;
     background-color: #000;
@@ -215,11 +231,93 @@ button {
     border-radius: 5px;
     font-weight: bold;
     text-transform: uppercase;
-  }
-  
-  /* Estilo para los asientos deshabilitados */
-  .seat-checkbox:disabled {
+}
+
+/* Estilo para los asientos deshabilitados */
+.seat-checkbox:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-  
+}
+
+.menu-bar {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    background-color: #1f1f1f;
+    /* Color oscuro para la barra */
+    border-bottom: 1px solid #333;
+    /* Borde sutil */
+    position: sticky;
+    /* Fija la barra en la parte superior */
+    top: 0;
+    z-index: 1000;
+    /* Asegura que esté por encima del contenido */
+}
+
+.menu-bar button {
+    background: none;
+    border: none;
+    color: $white-color;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.menu-bar button:hover {
+    color: $red;
+    /* Rojo distintivo de Netflix */
+    transform: scale(1.1);
+    /* Efecto de agrandamiento al pasar el cursor */
+}
+
+.menu-bar button.active {
+    color: $red;
+    /* Resalta el botón activo */
+    font-weight: bold;
+    /* Texto en negrita */
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    /* Columnas adaptables */
+    gap: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    /* Permite desplazamiento vertical */
+}
+
+.content-item {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.content-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.content-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    /* Bordes redondeados para las imágenes */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    /* Sombra sutil para dar profundidad */
+}
+
+.content-item p {
+    margin-top: 5px;
+    font-size: 14px;
+    text-align: center;
+    color: $white-color;
+}
+
+.content-item small {
+    font-size: 12px;
+    color: #ccc;
+    /* Gris claro para descripciones */
+    display: block;
+    margin-top: 5px;
+}

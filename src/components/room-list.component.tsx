@@ -15,7 +15,7 @@ const RoomList = () => {
       // Después de eliminar, actualizamos el estado para eliminarla de la lista
       dispatch({
         type: "REMOVE_ROOM",
-        payload: room,
+        payload: room
       });
     } catch (error) {
       console.error("Error deleting room:", error);
@@ -27,22 +27,22 @@ const RoomList = () => {
   const handleSelectRoom = (room: Room) => {
     dispatch({
       type: "SELECTED_ROOM",
-      payload: room,
+      payload: room
     });
   };
-
+  console.log(state.rooms);
   return (
     <div>
-      <h1>Salas</h1>
       <ul className="list-custom">
         {state.rooms.map((room) => (
           <li key={room.id}>
             <div
-              style={{ cursor: "pointer", textDecoration: "underline" }}
+              className="item-content"
               onClick={() => handleSelectRoom(room)} // Selecciona la sala al hacer clic
             >
               {room.name} - Capacidad: {room.capacity}
             </div>
+
             <div
               className="item-action"
               onClick={() => handleDelete(room)} // Llamamos a handleDelete al hacer clic en "Eliminar"

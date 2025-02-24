@@ -10,7 +10,7 @@ export class MovieService {
       title: movieData.title,
       genre: movieData.genre,
       duration: movieData.duration,
-      rating: 4.5, // Ejemplo de un valor de rating, lo puedes cambiar si es necesario
+      rating: movieData.rating
     };
 
     try {
@@ -46,7 +46,7 @@ export class MovieService {
   // Eliminar película por título
   static async deleteMovie(movie: Movie) {
     try {
-      const response = await axios.delete(`${BASE_URL}/movies/${movie.title}`, {
+      const response = await axios.delete(`${BASE_URL}/movies/${movie.id}`, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -69,7 +69,7 @@ export class MovieService {
     };
 
     try {
-      const response = await axios.put(`${BASE_URL}/movies/${movie.title}`, movieBody, {
+      const response = await axios.put(`${BASE_URL}/movies/${movie.id}`, movieBody, {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",

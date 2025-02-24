@@ -18,7 +18,7 @@ const MovieForm = () => {
     state.selectedMovie ? state.selectedMovie.rating : ""
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     if (name === "title") setTitle(value);
     if (name === "genre") setGenre(value);
@@ -35,39 +35,38 @@ const MovieForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     // Crear el objeto de la película
     const newMovie: Movie = {
       id: state.selectedMovie ? state.selectedMovie.id : Date.now().toString(), // Si hay una película seleccionada, mantén el mismo ID
       title,
       genre,
       duration: duration || 0,
-      rating,
+      rating
     };
-  
+
     if (state.selectedMovie) {
       // Si hay una película seleccionada, actualizamos
       MovieService.updateMovie(newMovie); // Suponiendo que tienes un servicio para actualizar
       dispatch({
         type: "UPDATE_MOVIE",
-        payload: newMovie,
+        payload: newMovie
       });
     } else {
       // Si no hay una película seleccionada, creamos una nueva
       MovieService.createMovie(newMovie);
       dispatch({
         type: "ADD_MOVIES",
-        payload: [newMovie],
+        payload: [newMovie]
       });
     }
-  
+
     // Limpiar los campos después de la acción
     setTitle("");
     setGenre("");
     setDuration(0);
     setRating("");
   };
-  
 
   useEffect(() => {
     if (state.selectedMovie) {
@@ -132,17 +131,21 @@ const MovieForm = () => {
           <label htmlFor="rating" className="input-label">
             Clasificación:
           </label>
-          <input
-            className="input-custom"
-            type="text"
+          <select
+            className="select-custom"
             id="rating"
             name="rating"
             value={rating}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">Selecciona una clasificación</option>
+            <option value="+7">+7</option>
+            <option value="+13">+13</option>
+            <option value="+16">+16</option>
+            <option value="+18">+18</option>
+          </select>
         </div>
-
         <div>
           <button type="submit">
             {state.selectedMovie ? "Actualizar Película" : "Registrar Película"}
